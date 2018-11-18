@@ -39,6 +39,7 @@ def backup():
     vms = getallvms()
     for vm in vms:
         create_snapshot(vm)
+        copy_vmx_file(vm)
         dump_monosparse_image(vm)
         remove_snapshot(vm)
 
@@ -46,6 +47,15 @@ VMFS_PREFIX="/vmfs/volumes/{}"
 def create_backup_dir():
     bdir = os.path.join(VMFS_PREFIX.format("nfsnas/vmbackups"), DATEDIR)
     run("mkdir -p {}".format(bdir))
+
+def copy_vmx_file(vm):
+    device, relpath = vm['imgfile'].split(' ')
+
+    src = os.path.join(VMFS_PREFIX.format(device[1:-1]), relpath)
+    dst = os.path.join(VMFS_PREFIX.format("nfsnas/vmbackups/{}".format(DATEDIR)), vm["name"].replace(" ", "_") + ".vmx")
+
+    print("cp {} {}".format(src, dst))
+    run("cp {} {}".format(src, dst))
 
 def dump_monosparse_image(vm):
     device, relpath = vm['imgfile'].split(' ')

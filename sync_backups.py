@@ -39,11 +39,9 @@ def main():
     dirs.sort()
 
     rm_dirs = dirs[:-3]
-    print(rm_dirs)
     remove_dirs(rm_dirs)
 
     up_dirs = dirs[-3:]
-    print(up_dirs)
     upload_dirs(up_dirs)
 
 if __name__ == '__main__':
